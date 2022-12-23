@@ -25,11 +25,11 @@ def update_status():
         flags[2] = s != status[1] or f != flags[1]
         flags[1] = f
         if f:
-            status[0] = "At Top"
+            status[0] = "Stay Top"
             status[1] = s
             hdl[0] = i
         else:
-            status[0] = "Not At Top"
+            status[0] = "Not Stay Top"
             status[1] = s
             hdl[0] = i
 
