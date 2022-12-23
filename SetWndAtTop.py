@@ -7,7 +7,7 @@ from threading import Thread
 from PIL import Image
 
 status = ["Windows status ", ""]
-flags = [True]
+flags = [True, True, False]
 hdl = [0]
 
 
@@ -18,9 +18,13 @@ icon.icon = image
 def update_status():
     i = win32gui.GetForegroundWindow()
     s = win32gui.GetWindowText(i)
-    if (s.strip()):
+
+    if s.strip():
         style = win32gui.GetWindowLong(hdl[0], win32con.GWL_EXSTYLE)
-        if (style & win32con.WS_EX_TOPMOST):
+        f = True if style & win32con.WS_EX_TOPMOST else False
+        flags[2] = s != status[1] or f != flags[1]
+        flags[1] = f
+        if f:
             status[0] = "At Top"
             status[1] = s
             hdl[0] = i
@@ -28,7 +32,7 @@ def update_status():
             status[0] = "Not At Top"
             status[1] = s
             hdl[0] = i
-    icon.update_menu()
+
 
 def set_active_window_alwaytop():
     [x, y, x1, y1] = win32gui.GetWindowRect(hdl[0])
@@ -53,6 +57,9 @@ icon.menu = menu
 def get_active_window_status():
     while flags[0]:
         update_status()
+        if flags[2]:
+            icon.update_menu()
+            flags[2] = False
         time.sleep(1)
 
 thread1 = Thread(target = get_active_window_status)
