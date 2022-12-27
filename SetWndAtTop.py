@@ -19,19 +19,23 @@ def update_status():
     i = win32gui.GetForegroundWindow()
     s = win32gui.GetWindowText(i)
 
-    if s.strip():
-        style = win32gui.GetWindowLong(hdl[0], win32con.GWL_EXSTYLE)
-        f = True if style & win32con.WS_EX_TOPMOST else False
-        flags[2] = s != status[1] or f != flags[1]
-        flags[1] = f
-        if f:
-            status[0] = "Stay Top"
-            status[1] = s
-            hdl[0] = i
-        else:
-            status[0] = "Not Stay Top"
-            status[1] = s
-            hdl[0] = i
+    flag = True
+    while flag:
+        flag = False
+        if s.strip():
+            style = win32gui.GetWindowLong(hdl[0], win32con.GWL_EXSTYLE)
+            f = True if style & win32con.WS_EX_TOPMOST else False
+            flags[2] = s != status[1] or f != flags[1]
+            flags[1] = f
+            if f:
+                status[0] = "Stay Top"
+                status[1] = s
+                hdl[0] = i
+            else:
+                status[0] = "Not Stay Top"
+                status[1] = s
+                hdl[0] = i
+            flag = flags[2]
 
 
 def set_active_window_alwaytop():
